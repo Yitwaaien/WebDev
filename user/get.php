@@ -13,6 +13,7 @@ $user = new User($db);
 
 
 $stmt = $user->get();
+
 $num = $stmt->rowCount();
 
 if ($num > 0) {
@@ -23,23 +24,25 @@ if ($num > 0) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         // извлекаем строку
-        extract($row, 1);
+        extract($row);
 
         $user_item = array(
             "id" => $id,
+            "username" => $username,
+            "city" => $city,
             "name" => $name,
-            "city_id" => $city_id,
         );
 
-        array_push($user_arr["items"], $user_item);
+        $user_arr["items"][] = $user_item;
+
     }
 
     http_response_code(200);
 
-    echo json_encode($user_arr, JSON_THROW_ON_ERROR);
+    echo json_encode($user_arr);
 
 } else {
     http_response_code(404);
 
-    echo json_encode(["message" => "Пользователь не найдены."], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+    echo json_encode(["message" => "Пользователи не найдены."]);
 }
